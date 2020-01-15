@@ -27,3 +27,30 @@ window.greta_mcmc_list <- function(x, start, end, thin, ...) {
 # add new methods for these generics, to make them look nicer and be more
 # user-friendly:
 # print, plot, summary
+
+print.greta_mcmc_list <- function(x, ...) {
+  cat("A greta mcmc list object (MCMC draws) \n")
+
+  model_info <- attr(x, "model_info")
+  sampler <- model_info$samplers[[1]]
+  n_chains <- sampler$n_chains
+  thin <- sampler$thin
+
+  # an mcmc.list does not contain it's own copy of "mcpar"
+  # mcpar = c(start, end, thin)
+  n_iterations <- attr(x[[1]], "mcpar")[[2]]
+  n_warmup_iterations <- attr(model_info$raw_draws[[1]], "mcpar")[[2]]
+
+  cat(
+    paste0(n_chains, " chains, each with ", n_iterations, " iterations",
+           " (", n_warmup_iterations, " warmup) with thin = ", thin, "\n")
+  )
+
+  n_draws_per_chain <- (n_iterations - n_warmup_iterations) / thin
+  cat(
+    paste0("Post-warmup draws per chain = ", n_draws_per_chain, ", ",
+           "Total post-warmup draws = ", n_draws_per_chain * n_chains, "\n")
+  )
+
+  cat("\n")
+}
