@@ -463,8 +463,8 @@ stashed_samples <- function() {
     } else {
 
       thins <- lapply(samplers, member, "thin")
-      n_free_state_draws <- lengths(free_state_draws)
-      n_values_draws <- lengths(values_draws)
+      n_free_state_draws <- lengths(free_state_draws) * thins
+      n_values_draws <- lengths(values_draws) * thins
 
       # convert to mcmc objects, passing on thinning
       free_state_draws <- mapply(prepare_draws,
